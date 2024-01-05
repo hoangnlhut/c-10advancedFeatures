@@ -1,0 +1,78 @@
+﻿using WarehouseManagementSystem.Domain;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WarehouseManagementSystem.Business
+{
+    public class OrderProcessor
+    {
+        //public delegate bool OrderInitialized(Order order);
+        //public delegate void OnComplelte(Order order);
+
+        /// <summary>
+        ///  refactor for using Action<T> and Func<T, TResult>
+        /// </summary>
+        /// 
+        public Func<Order, bool> OrderInitialized { get; set; }
+        public Action<Order> Complete;
+
+        /// <summary>
+        /// declare event
+        /// </summary>
+        /// <param name="order"></param>
+        /// <exception cref="Exception"></exception>
+        /// 
+        public event EventHandler OrderCreated;
+
+        protected virtual void OnOrderCreated()
+        {
+            OrderCreated?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// using event hanlder generic class which inherits EventArgs 
+        /// </summary>
+        /// <param name="order"></param>
+        /// <exception cref="Exception"></exception>
+        /// 
+        public event EventHandler<OrderCreatedEventArgs> OrderCreatedInherit;
+
+        protected virtual void OnOrderCreated(OrderCreatedEventArgs args)
+        {
+            OrderCreatedInherit?.Invoke(this, args);
+        }
+
+        private void Initialize(Order order)
+        {
+            ArgumentNullException.ThrowIfNull(order);
+           if(!OrderInitialized.Invoke(order))
+            {
+                throw new Exception("Could not Initialized..");
+            }
+            Complete.Invoke(order);
+        }
+
+        public void Process(Order order, Action<Order> onComplelte = default)
+        {
+            Initialize(order);
+            OnOrderCreated();
+            OnOrderCreated(new OrderCreatedEventArgs()
+            { 
+                Order = order,
+                NewTotal = 80,
+                OldTotal = 100
+            });
+            onComplelte?.Invoke(order);
+        }
+    }
+
+    //public class BatchOrderProcessor : OrderProcessor
+    //{
+    //    protected override void OnOrderCreated()
+    //    {
+    //        base.OnOrderCreated();
+    //    }
+    //}
+}
