@@ -66,6 +66,36 @@ namespace WarehouseManagementSystem.Business
             });
             onComplelte?.Invoke(order);
         }
+
+        public string GetOrderStatus(Order order)
+        {
+            var status = order switch
+            {
+                CancelledOrder or ShippedOrder => "Already handled",
+                { Total: > 500m } => "High priority order",
+                PriorityOrder or { Total: > 100m and < 500m } => "",
+                not null and var instance => instance.OrderNumber.ToString()
+            };
+            return status;
+        }
+        public string GetShippingStatus(Order order)
+        {
+            var shippingProviderStatus = order switch
+            {
+                ( >= 10, true, _) => "Multiple shipments!",
+                ( <= 3, _, SwedishPostalServiceShippingProvider) => "Manual pickup required",
+                (_, true, _) => "Ready for shipment",
+                _ => "Not ready for shipment"
+            };
+            return shippingProviderStatus;
+        }
+
+        public string GenerateReport(Order order)
+        {
+            return GetOrderStatus(order) +
+                Environment.NewLine +
+                GetShippingStatus(order);
+        }
     }
 
     //public class BatchOrderProcessor : OrderProcessor
@@ -75,4 +105,5 @@ namespace WarehouseManagementSystem.Business
     //        base.OnOrderCreated();
     //    }
     //}
+
 }

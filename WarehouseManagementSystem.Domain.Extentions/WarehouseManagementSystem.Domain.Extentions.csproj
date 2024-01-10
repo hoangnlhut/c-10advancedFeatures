@@ -4,12 +4,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WarehouseManagementSystem.Business\WarehouseManagementSystem.Business.csproj" />
-    <ProjectReference Include="..\WarehouseManagementSystem.Domain.Extentions\WarehouseManagementSystem.Domain.Extentions.csproj" />
+    <PackageReference Include="NPOI" Version="2.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WarehouseManagementSystem.Domain\WarehouseManagementSystem.Domain.csproj" />
   </ItemGroup>
 

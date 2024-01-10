@@ -4,7 +4,7 @@
     {
         public Guid OrderNumber { get; init; }
         public ShippingProvider ShippingProvider { get; init; }
-        public int Total { get; }
+        public decimal Total { get; }
         public bool IsReadyForShipment { get; set; } = true;
         public IEnumerable<Item> LineItems { get; set; }
 
@@ -36,5 +36,54 @@
         {
             return !(left == right);
         }
+        public  string GenerateReport(string re)
+        {
+            return $"ORDER REPORT ({OrderNumber})" +
+                   $"{Environment.NewLine}" +
+                   $"Items: {LineItems.Count()}" +
+                   $"{Environment.NewLine}" +
+                   $"Total: {Total}" +
+                   $"{Environment.NewLine}" +
+                   $"Recipient: {re}"
+                   ;
+        }
+
+        //public void Deconstruct(out int total, out bool isReady)
+        //{
+        //    total = LineItems.Count();
+        //    isReady = IsReadyForShipment;
+        //}
+
+        public void Deconstruct(out decimal total,
+           out bool ready)
+        {
+            total = Total;
+            ready = IsReadyForShipment;
+        }
+
+        public void Deconstruct(out decimal total,
+            out bool ready,
+            out IEnumerable<Item> items)
+        {
+            total = Total;
+            ready = IsReadyForShipment;
+            items = LineItems;
+        }
     }
+
+    public class PriorityOrder : Order { }
+
+    public class ShippedOrder : Order
+    {
+        public DateTime ShippedDate { get; set; }
+    }
+
+    public class CancelledOrder : Order
+    {
+        public DateTime CancelledDate { get; set; }
+    }
+
+
+    public class ProcessedOrder : Order { }
+
 }
