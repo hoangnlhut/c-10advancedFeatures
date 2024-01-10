@@ -87,6 +87,7 @@ namespace WarehouseManagementSystem.Business
                 (_, true, _) => "Ready for shipment",
                 _ => "Not ready for shipment"
             };
+
             return shippingProviderStatus;
         }
 
