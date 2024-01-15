@@ -2,6 +2,8 @@
 {
     public class Order : IEquatable<Order?>
     {
+        public Order() { 
+        }
         public Guid OrderNumber { get; init; }
         public ShippingProvider ShippingProvider { get; init; }
         public decimal Total { get; }

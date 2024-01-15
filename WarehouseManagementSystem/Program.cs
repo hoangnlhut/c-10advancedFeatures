@@ -117,6 +117,9 @@ namespace WarehouseManagementSystem
 
 
             #endregion
+            /// Test Record Type
+            /// 
+            //RecordTypes();
 
             //process.Process(oder, SendConfirmationEmail);
 
@@ -125,6 +128,9 @@ namespace WarehouseManagementSystem
             //{
             //    Console.WriteLine(item?.Price);
             //}
+
+            //Testing working with Range
+            WorkingWithRange();
 
             // Test Deconstruction Dictionary
             DeconstructionWithDictionary();
@@ -239,6 +245,74 @@ namespace WarehouseManagementSystem
 
             var json2= JsonSerializer.Serialize(group, options: new() { IncludeFields = true});
             Console.WriteLine($"{json2}");
+        }
+
+        public static void RecordTypes()
+        {
+            Customer customer = new("hoang", "nguyen le");
+            Console.WriteLine($"Fistname :{customer.FirstName} and Last Name: {customer.LastName}");
+            Console.WriteLine(customer);
+
+            //compare to 2 record
+            var first = new Customer("hoang1", "nguyen");
+            var second = new Customer("hoang1", "nguyen");
+
+            Console.WriteLine($"Are these instances equal? {first == second}");
+
+            var other = new OtherPeople("hoang1", "nguyen");
+            Console.WriteLine($"Are these instances equal? {first == other} and {second == other}");
+
+            CustomerWithOrder orders = new("hoang", "nguyen le", new List<Order>());
+            orders.Orders.Add(new Order());  // this still work
+
+
+            //orders.Orders = new List<Order>(); // cannot be assign to new list
+
+            //we can change the value of properties through with keyword
+            var newCustomer = first with { FirstName = "trnag", LastName = "Thu" };
+            Console.WriteLine(newCustomer);
+        }
+
+        public static void  WorkingWithRange()
+        {
+            int[] numbers = new[] { 0, 1, 3,4, 5, 7, 8, 9, 13 , 16, 19 };
+            int[] slice = numbers[..]; // get all
+            int[] slice2 = numbers[..2]; // get to 2
+            int slice3 = numbers[^1];// get last index
+            int slice4 = numbers[^5];// get last element away 5 element from the ent: the result is 5
+
+            Console.WriteLine(slice3);
+            Console.WriteLine(slice4);
+
+
+            foreach (var item in slice)
+            {
+                Console.WriteLine(item);
+            }
+
+            foreach (var item in slice2)
+            {
+                Console.WriteLine(item);
+            }
+
+            var payload = new byte[1024];
+
+            var resultBool = new PayloadValidator().Validate(payload);
+
+            Console.WriteLine(resultBool);
+
+            //check if the ReadOnlySpan contains reference types and that reference type has properties that are not immutable , the data would be changeable
+
+            var orders = new Order[]
+            {
+                new Order(){OrderNumber = Guid.NewGuid(), LineItems = new List<Item>(){new Item{ Name = "hoang1"} } },
+                new Order(){OrderNumber = Guid.NewGuid(), LineItems = new List<Item>(){new Item{ Name = "hoang2"} } },
+                new Order(){OrderNumber = Guid.NewGuid(), LineItems = new List<Item>(){new Item{ Name = "hoang3"} } },
+            };
+
+            var checkResult = new PayloadValidator().ValidateReferenceType(orders);
+
+            Console.WriteLine(checkResult);
         }
     }
 }

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WarehouseManagementSystem.Business\WarehouseManagementSystem.Business.csproj" />
     <ProjectReference Include="..\WarehouseManagementSystem.Domain.Extentions\WarehouseManagementSystem.Domain.Extentions.csproj" />
   </ItemGroup>
 
